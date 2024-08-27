@@ -14,12 +14,24 @@ const Register = () => {
     };
 
     const validationSchema = Yup.object({
-        username: Yup.string().required('Username is required'),
-        password: Yup.string().required('Password is required'),
+        username: Yup.string()
+            .min(3, 'Username must be at least 3 characters')
+            .max(14, 'Username must be 14 characters or less')
+            .required('Username is required'),
+        password: Yup.string()
+            .min(8, 'Password must be at least 8 characters')
+            .max(14, 'Password must be 14 characters or less')
+            .matches(
+                /^(?=.*[0-9])(?=.*[!@#$%^&*])/,
+                'Password must contain at least one number and one special character'
+            )
+            .required('Password is required'),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Confirm Password is required'),
-        email: Yup.string().email('Invalid email format').required('Email is required'),
+        email: Yup.string()
+            .email('Invalid email format')
+            .required('Email is required'),
     });
 
     const onSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
